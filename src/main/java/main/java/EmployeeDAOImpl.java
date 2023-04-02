@@ -20,11 +20,11 @@ public class EmployeeDAOImpl implements EmployeeDAO {
                 "INSERT INTO employee (first_name, last_name, gender," +
                         " age, city_id) VALUES ((?), (?), (?), (?), (?))")) {
 
-            statement.setString(1, employee.getFirst_name());
-            statement.setString(2, employee.getLast_name());
+            statement.setString(1, employee.getFirstName());
+            statement.setString(2, employee.getLastName());
             statement.setString(3, employee.getGender());
             statement.setInt(4, employee.getAge());
-            statement.setInt(5, employee.getCity_id());
+            statement.setInt(5, employee.getCityId());
             statement.executeQuery();
 
         } catch (SQLException e) {
@@ -34,7 +34,6 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
     public Employee selectEmployeeById(int id) {
-        Employee employee = new Employee();
 
         try (PreparedStatement statement = connection.prepareStatement(
                 "SELECT * FROM employee WHERE id=(?)")) {
@@ -42,18 +41,26 @@ public class EmployeeDAOImpl implements EmployeeDAO {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
 
-            while (resultSet.next()) {
+            int n = 0;
+
+            if (resultSet.next()) {
+                n = resultSet.getInt(1);
+            }
+            if (n > 0) {
+                Employee employee = new Employee();
                 employee.setId(Integer.parseInt(resultSet.getString("id")));
-                employee.setFirst_name(resultSet.getString("first_name"));
-                employee.setLast_name(resultSet.getString("last_name"));
+                employee.setFirstName(resultSet.getString("first_name"));
+                employee.setLastName(resultSet.getString("last_name"));
                 employee.setGender(resultSet.getString("gender"));
                 employee.setAge(Integer.parseInt("age"));
-                employee.setCity_id(Integer.parseInt("city_id"));
+                employee.setCityId(Integer.parseInt("city_id"));
+                return employee;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Employee not found.");
+            return null;
         }
-        return employee;
+        return null;
     }
 
     @Override
