@@ -1,5 +1,8 @@
 package main.java;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -91,39 +94,23 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     }
 
     @Override
-    public void updateEmployee(int id, String first_name, String last_name, String gender, int age, int city_id) {
-        try (PreparedStatement statement = connection.prepareStatement(
-                "UPDATE employee SET first_name=(?)," +
-                        "last_name=(?)," +
-                        "gender=(?)," +
-                        "age=(?)," +
-                        "city_id=(?)," +
-                        " WHERE id=(?)")) {
-
-            statement.setString(1, first_name);
-            statement.setString(2, last_name);
-            statement.setString(3, gender);
-            statement.setInt(4, age);
-            statement.setInt(5, city_id);
-
-            statement.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void updateEmployee(Employee employee) {
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()){
+            Transaction transaction = session.beginTransaction();
+            session.update(employee);
+            transaction.commit();
         }
+
+
     }
 
     @Override
-    public void dropEmployee(int id) {
-
-        try (PreparedStatement statement = connection.prepareStatement(
-                "DELETE FROM employee WHERE id=(?)")) {
-
-            statement.setInt(1, id);
-            statement.executeQuery();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void dropEmployee(Employee employee) {
+        try (
+                Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.delete(employee);
+            transaction.commit();
         }
     }
 }

@@ -20,9 +20,9 @@ public class Application {
 
             employeeDAO.getAllEmployees();
 
-            employeeDAO.updateEmployee(5, "Elena", "Matrosova", "FEMALE", 25, 2);
+            employeeDAO.updateEmployee(newEmployee);
 
-            employeeDAO.dropEmployee(2);
+            employeeDAO.dropEmployee(newEmployee);
         }
 
         try (final Connection connection = DriverManager.getConnection(url, user, password);
