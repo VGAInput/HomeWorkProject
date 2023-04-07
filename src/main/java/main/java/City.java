@@ -1,15 +1,34 @@
 package main.java;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+
+
+@Entity
+@Table(name = "city")
 
 public class City {
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Employee> employees = new ArrayList<>();
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "city_id")
     private int city_id;
+
+    @Column(name = "city_id")
     private String city_name;
 
-    public City(int city_id, String city_name) {
-        this.city_id = city_id;
+    public City(String city_name) {
         this.city_name = city_name;
+    }
+
+    public City() {
     }
 
     public int getCity_id() {

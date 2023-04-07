@@ -6,42 +6,42 @@ import org.hibernate.Transaction;
 import java.sql.Connection;
 import java.util.List;
 
-public class EmployeeDAOImpl implements EmployeeDAO {
+public class CityDAOImpl implements CityDAO {
     private Connection connection;
 
-    public EmployeeDAOImpl(Connection connection) {
+    public CityDAOImpl(Connection connection) {
         this.connection = connection;
     }
 
     @Override
-    public void insertEmployeeIntoTable(Employee employee) {
+    public void insertCityIntoTable(City city) {
         try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();) {
             Transaction transaction = session.beginTransaction();
-            session.save(employee);
+            session.save(city);
             transaction.commit();
         }
     }
 
     @Override
-    public Employee selectEmployeeById(int id) {
-        return HibernateSessionFactoryUtil.getSessionFactory().openSession().get(Employee.class, id);
+    public City selectCityById(int id) {
+        return HibernateSessionFactoryUtil.getSessionFactory().openSession().get(City.class, id);
     }
 
 
     @Override
-    public List<Employee> getAllEmployees() {
+    public List<City> getAllCities() {
 
-        List<Employee> employees = (List<Employee>) HibernateSessionFactoryUtil.getSessionFactory().openSession().
-                createQuery("FROM Employee").list();
-        return employees;
+        List<City> cities = (List<City>) HibernateSessionFactoryUtil.getSessionFactory().openSession().
+                createQuery("FROM City").list();
+        return cities;
 
     }
 
     @Override
-    public void updateEmployee(Employee employee) {
+    public void updateCity(City city) {
         try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.update(employee);
+            session.update(city);
             transaction.commit();
         }
 
@@ -49,11 +49,11 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     }
 
     @Override
-    public void dropEmployee(Employee employee) {
+    public void dropCity(City city) {
         try (
                 Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.delete(employee);
+            session.delete(city);
             transaction.commit();
         }
     }
