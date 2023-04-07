@@ -4,10 +4,13 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "book")
+@Table(name = "employee")
 
 public class Employee {
 
+    @ManyToOne
+    @JoinColumn(name = "city_id",nullable = false)
+    private City city;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
