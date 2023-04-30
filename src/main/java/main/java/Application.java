@@ -1,6 +1,8 @@
 package main.java;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Application {
 
@@ -10,38 +12,40 @@ public class Application {
         final String password = "0451";
         final String url = "jdbc:postgresql://localhost:5432/skypro";
 
+        List<Employee> employeeList = new ArrayList<>();
+
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
+
+            //Добавление нового населённого пункта в базу данных.
+            CityDAO cityDAO = new CityDAOImpl(connection);
+            City newCity = new City("Tver'");
+
+            // Создание списка работников
+
+            employeeList.add(new Employee("Andrey", "Martynov", "MALE", 37, 12));
+            employeeList.add(new Employee("Marina", "Eduardova", "FEMALE", 29, 12));
+            employeeList.add(new Employee("Anna", "Arbuzova", "FEMALE", 41, 12));
+            employeeList.add(new Employee("Evgeniy", "Kuzmin", "MALE", 35, 12));
+
             EmployeeDAO employeeDAO = new EmployeeDAOImpl(connection);
 
-            Employee newEmployee = new Employee("Andrey", "Martynov", "MALE", 37, 4);
-            employeeDAO.insertEmployeeIntoTable(newEmployee);
+            // Добавление новых работников в базу данных.
+            for (Employee e : employeeList)
+                employeeDAO.insertEmployeeIntoTable(e);
 
             employeeDAO.selectEmployeeById(4);
-
             employeeDAO.getAllEmployees();
 
-            employeeDAO.updateEmployee(newEmployee);
+            //Замените одного из сотрудников в городе,
+            employeeDAO.updateEmployee(new Employee("Sergey", "Arturov", "MALE", 27, 11));
 
-            employeeDAO.dropEmployee(newEmployee);
-        }
+            employeeDAO.dropEmployee(employeeList.get(2));
 
-        try (final Connection connection = DriverManager.getConnection(url, user, password);
-             PreparedStatement statement = connection.prepareStatement("" +
-                     "SELECT * FROM employee WHERE id = (?)")) {
+            //Удаление экземпляра City из БД.
+            cityDAO.dropCity(newCity);
 
-            statement.setInt(1, 3);
-
-            final ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-
-                String firstName = resultSet.getString("first_name") +
-                        " " + resultSet.getString("last_name") +
-                        ", " + resultSet.getString("gender") +
-                        ", city id: " + resultSet.getString("city_id");
-                System.out.println(firstName);
-            }
         }
     }
+
 
 }

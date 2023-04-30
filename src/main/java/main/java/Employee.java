@@ -1,5 +1,7 @@
 package main.java;
 
+import org.hibernate.annotations.Fetch;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -8,7 +10,9 @@ import java.util.Objects;
 
 public class Employee {
 
-    @ManyToOne
+
+    // Hibernate загрузит обьект только после его упоминания.
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id",nullable = false)
     private City city;
 

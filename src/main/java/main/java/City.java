@@ -1,5 +1,8 @@
 package main.java;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +14,12 @@ import java.util.Set;
 @Table(name = "city")
 
 public class City {
-
+    // Включение полной каскадности entity.
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Employee> employees = new ArrayList<>();
 
+    // Hibernate автоматически загрузит все Entity упомянутого города.
+    @Fetch(FetchMode.JOIN)
+    private List<Employee> employees = new ArrayList<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
